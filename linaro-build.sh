@@ -274,9 +274,10 @@ ${ARG_TOOLCHAIN_SRC_DIR}/build/configure \
   --with-mpfr-version=${MPFR_VERSION-3.1.1} \
   --with-mpc-version=${MPC_VERSION-current} \
   \
-  ${LINARO_BUILD_EXTRA_CONFIGURE_FLAGS}
+  ${LINARO_BUILD_EXTRA_CONFIGURE_FLAGS} || abort "configure: Error $?"
 
-make HOSTGCC="$HOSTGCC" && make install
+make HOSTGCC="$HOSTGCC" ${LINARO_BUILD_EXTRA_MAKE_FLAGS} || abort "make: Error $?"
+make install || abort "make install: Error $?"
 
 cat >${ARG_PREFIX_DIR}/BUILD-INFO.txt <<'EOF'
 Files-Pattern: *
