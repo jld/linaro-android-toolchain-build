@@ -389,7 +389,7 @@ config-target-gold: stmp-config-target-gold
 # We do not want to enable shared libraries in gold
 GOLD_CONFIG_ARGS=--prefix=$(prefix) \
 	--target=${target_alias} --host=${host} --build=${build} \
-	$(baseargs) --disable-shared
+	$(baseargs) --disable-shared --disable-werror
 stmp-config-target-gold: config.status
 	([ -d ${GOLD_VERSION} ] || \
 	  mkdir ${GOLD_VERSION}) && \
