@@ -197,6 +197,7 @@ while [ $# -gt 0 ]; do
 done
 
 BUILD_ARCH=`uname -m`
+BUILD_OS=`uname -s`
 BUILD_WITH_LOCAL=
 BUILD_HOST=
 BUILD_SYSROOT=
@@ -245,13 +246,34 @@ if [ x"${ARG_WITH_GDB}" != x"" ]; then
   BUILD_WITH_GDB="--with-gdb-version=${ARG_LINARO_GDB_VER}"
 fi
 
-if echo "$BUILD_ARCH" | grep -q '64' ; then
-  info "Use 64-bit Build environment"
-  BUILD_HOST=x86_64-linux-gnu
-else
-  info "Use 32-bit Build environment"
-  BUILD_HOST=i686-unknown-linux-gnu
-fi
+case "$BUILD_OS" in
+    Linux)
+	case "$BUILD_ARCH" in
+	    *64*)
+		info "Use 64-bit Build environment"
+		BUILD_HOST=${BUILD_ARCH}-linux-gnu
+		;;
+	    *)
+		info "Use 32-bit Build environment"
+		BUILD_HOST=${BUILD_ARCH}-unknown-linux-gnu
+		;;
+	esac
+	;;
+    Darwin)
+	case "$BUILD_ARCH" in
+	    *64*)
+		info "Use 64-bit Build environment"
+		;;
+	    *)
+		info "Use 32-bit Build environment"
+		;;
+	esac
+	BUILD_HOST=${BUILD_ARCH}-apple-darwin
+	;;
+    *)
+	error "Unrecognized OS: $BUILD_OS"
+	;;
+esac
 
 [ -z "$TARGET" ] && TARGET=arm-linux-androideabi
 
